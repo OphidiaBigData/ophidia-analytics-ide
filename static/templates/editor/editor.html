@@ -1,0 +1,486 @@
+<div style="height:100%;">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <ul class="nav nav-pills">
+                <li class="active"><a data-toggle="pill" href="#editor">Editor</a></li>
+                <li><a data-toggle="pill" href="#code">Code</a></li>
+                <li><a data-toggle="pill" href="#monitoring">Monitoring</a></li>
+                <!--<li><a data-toggle="pill" href="#json_response">JSON Response</a></li>-->
+                <!--<input type="file" on-read-file="showContent($fileContent)" />-->
+                <li><a data-toggle="pill" href="#my_workflows">MyWorkflows</a></li>
+                <li><input type="file" name="file" id="file" on-read-file="uploadWorkflow($fileContent)" class="inputfile" />
+                <label for="file">Upload workflow</label></li>
+            </ul>
+
+        </div>
+    </div>
+    <br>
+    <div class="tab-content">
+        <div id="editor" class="tab-pane fade in active">
+
+            <div class="row">
+                <div class="col-sm-2" style="height:100%;">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Operators</h3>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div class="panel-body" style="overflow:hidden; height:100%;width:100%;">
+                            <div class="accordion-group" id="myGroup">
+                            <div style="background: #90EE90; min-height: 15px; min-width:160px;  padding: 8px; margin-bottom: 15px; font-weight: bold;" class="well well-sm" data-toggle="collapse" data-target="#{{category | dashSeparatedCase }}" data-parent="#myGroup" ng-repeat="category in operatorsCategories | orderBy:'toString()'">{{category}}
+                                <a href="http://ophidia.cmcc.it/documentation/users/operators/index.html#{{category | dashSeparatedCase }}" target="_blank">
+                                  <span class="glyphicon glyphicon-question-sign pull-right"></span>
+                                </a>
+                                <div id="{{category | dashSeparatedCase }}" class="collapse">
+                                <div class="well well-sm" ng-repeat="operator in operators | orderBy:'name' track by operator.name " ng-if='operator.category == category' style="color: black; min-height: 10px; min-width:120px; padding: 9px; margin-bottom: 5px; background-color:#F4C430; font-weight: normal;"
+                                 data-drag="true"
+                                 data-jqyoui-options="{revert: 'invalid', helper: 'clone', zIndex:1000}"
+                                 ng-model="operators"
+                                 jqyoui-draggable="{index: {{$index}}, animate: true, placeholder: 'keep', onStart:'startCallback(operator, $index)', onStop: 'stopCallback'}">
+                                {{operator.name}}
+
+                                </div>
+
+                                </div>
+                            </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-7" style="height:100%; overflow:hidden;">
+
+
+                    <div class="panel panel-primary" style="height:100%;">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                Worksheet
+                                <div class="col-sm-4 pull-right">
+                                    <div ui-slider min="10" max="120" ng-model="worksheetZoomlevel"></div>
+                                </div>
+                            </h3>
+                        </div>
+
+                        <div class="panel-body" style="overflow:hidden; height:100%;">
+                            <js-plumb-canvas on-connection="onConnection" x="pos_x" y="pos_y" zoom="worksheetZoomlevel"
+                                             id="worksheet" data-drop="true"
+                                             jqyoui-droppable="{multiple:true}">
+                                <ng-include src="'standardTemplate.html'"
+                                            ng-repeat="task in workflow.tasks"></ng-include>
+                            </js-plumb-canvas>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-3" style="height:100%;">
+                    <div class="row">
+
+                        <div class="col-sm-12">
+                            <ul class="nav nav-tabs nav-pills details">
+                                 <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown">Details <span class="caret"></span></a>
+
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#ophidia_server_connection" data-toggle="tab">Connection to Ophidia
+                                    Server</a>
+                                        </li>
+                                        <li><a href="#workflow_attributes" data-toggle="tab">Workflow global
+                                    attributes</a>
+                                        </li>
+                                        <li><a href="#task_details" data-toggle="tab">Task details</a>
+                                        </li>
+                                        <li><a href="#dependency_options" data-toggle="tab">Dependency options</a>
+                                        </li>
+                                        <li><a href="#new_dependency" data-toggle="tab">New dependency</a>
+                                        </li>
+                                        <li><a href="#workflow_submission" data-toggle="tab">Submit workflow</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                            </ul>
+
+
+
+
+
+                        </div>
+                    </div>
+
+                    <script>
+                        //Needed to collapse other categories when one is expanded
+                        var $myGroup = $('#myGroup');
+                            $myGroup.on('show.bs.collapse','.collapse', function() {
+                                $myGroup.find('.collapse.in').collapse('hide');
+                        });
+                        //Needed to switch from grid to list in "MyWorkflows"
+                        $(document).ready(function() {
+                            $('#list').click(function(event){event.preventDefault();$('#products .item').addClass('list-group-item');});
+                            $('#grid').click(function(event){event.preventDefault();$('#products .item').removeClass('list-group-item');$('#products .item').addClass('grid-group-item');});
+                        });
+                    </script>
+
+                    <div id="details" class="tab-content">
+                        <div id="ophidia_server_connection" class="tab-pane fade in active">
+                            <div class="panel panel-primary" style="overflow:hidden; height:100%;width:100%;">
+
+                                <div ng-controller="ConnectionFormController" class="panel-body">
+                                    <h4>Connection to Ophidia Server</h4>
+
+                                    <form name="ConnForm" sf-schema="connectionSchema" sf-form="connectionForm" sf-model="connectionModel"
+                                          ng-submit="submitConnectionForm(connectionModel, ConnForm)"></form>
+
+                                    * required
+                                </div>
+                            </div>
+                        </div>
+                        <div id="workflow_attributes" class="tab-pane fade">
+                            <div class="panel panel-primary" style="height:500px;overflow-y:scroll;width:100%;">
+
+
+                                    <div ng-controller="WorkflowAttributesFormController" class="panel-body">
+
+                                    <h4>Workflow global attributes</h4>
+                                    <form name="GlobAttrForm" sf-schema="workflowAttributesSchema" sf-form="workflowAttributesForm" sf-model="workflowAttributesModel"
+                                          ng-submit="submitWorkflowAttributesForm(workflowAttributesModel, GlobAttrForm)"></form>
+
+                                    * required
+
+                                    </div>
+
+                            </div>
+                        </div>
+                        <div id="task_details" class="tab-pane fade">
+                            <div class="panel panel-primary">
+
+                                <div class="panel-body" style="height:500px;overflow-y:scroll;width:100%;">
+                                    <div class="form-group">
+                                        <label class="control-label">Task name</label>
+                                        <input type="text" class="form-control" ng-model-options='{ debounce: 1000 }' ng-change="editTaskName()" ng-model="activeTask.name">
+
+                                    </div>
+                                    <button class="btn btn-danger task-operations" ng-click="deleteTask(activeTask)"><span class="glyphicon glyphicon-trash"></span></button>
+                                    <button class="btn btn-warning task-operations" ng-click="duplicateTask(activeTask)"><span class="glyphicon glyphicon-duplicate"></span></button>
+                                    <label class="control-label">Task arguments</label>
+                                    <div ng-controller="ArgumentFormController">
+                                        <form name="ArgForm" sf-schema="argumentSchema" sf-form="argumentForm" sf-model="argumentModel"
+                                              ng-submit="submitArgumentForm(argumentModel, ArgForm)"></form>
+                                    </div>
+
+                                    <label class="control-label">Task functions</label>
+                                    <div ng-controller="FunctionFormController">
+                                    <form name="FuncForm" sf-schema="functionsSchema" sf-form="functionsForm" sf-model="functionsModel"
+                                          ng-submit="submitFunctionsForm(functionsModel, FuncForm)"></form>
+                                     <div ng-if="!(functionsSchema | isEmpty)">* required
+                                   </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div id="dependency_options" class="tab-pane fade">
+                            <div class="panel panel-primary">
+
+                                <div class="panel-body" style="height:500px;overflow-y:scroll;width:100%;">
+                                    <h4>Dependency</h4>
+                                    <div class="form-group">
+                                        <label>Task...</label>
+                                        <input ng-model="dependency.dependentTask.name" readonly="true">
+                                        </input>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>...depends on task</label>
+                                        <input ng-model="dependency.independentTask.name" readonly="true">
+                                        </input>
+                                    </div>
+
+
+                                    <br>
+                                     <h4>Options</h4>
+
+                                    <form sf-schema="dependencySchema" sf-form="dependencyForm" sf-model="dependencyModel"
+                                          ng-submit="submitDependencyForm(dependencyModel)"></form>
+
+
+                                </div>
+                            </div>
+                        </div>
+                         <div id="new_dependency" class="tab-pane fade">
+                            <div class="panel panel-primary">
+
+                                <div class="panel-body" style="height:500px;overflow-y:scroll;width:100%;">
+                                    <h4>New dependency</h4>
+                                    <div class="form-group">
+                                        <label>Task...</label>
+                                        <select ng-model="dependency.dependentTask" ng-options="task.name for task in workflow.tasks">
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>...depends on task</label>
+                                        <select ng-model="dependency.independentTask" ng-options="task.name for task in workflow.tasks">
+                                        </select>
+                                    </div>
+
+                                     <button ng-click="createNewDependency()" class="btn btn-primary">Create dependency</button>
+
+
+                                     <h4>Options</h4>
+                                     <br>
+                                    <form sf-schema="dependencySchema" sf-form="dependencyForm" sf-model="dependencyModel"
+                                          ng-submit="submitDependencyForm(dependencyModel)"></form>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div id="workflow_submission" class="tab-pane fade">
+                            <div class="panel panel-primary">
+                                <div class="panel-body" style="height:500px;overflow-y:scroll;width:100%;">
+                                    <div ng-repeat="parameter in parameters" class="form-group">
+                                        <label class="control-label">${{parameter.id}}</label>
+                                        <input type="text" class="form-control" placeholder="" ng-model="parameter.name">
+
+                                    </div>
+
+                                    <div class="col-sm-3 pull-left">
+                                        <button ng-click="addParameter()" class="btn btn-success">Add parameter</button>
+                                        <button ng-click="submitWorkflow()" class="btn btn-success">Submit</button>
+                                        <button ng-click="saveWorkflow()" class="btn btn-success">Save</button>
+                                        <a class="btn btn-success" href="data:text/json;charset=utf-8,{{encodeJson(jsonworkflow)}}" download="{{jsonworkflow.name}}.json">Export JSON</a>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div id="code" class="tab-pane fade">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Code</h3>
+                        </div>
+                        <div class="panel-body"  style="height:400px;width:100%;">
+                            <textarea ng-model-options='{ debounce: 1000 }' ng-change="editJSONWorkflow()" ng-model="jsonstring" >{{jsonstring}}</textarea>
+                        </div>
+
+                        <div class="pull-right">
+                            
+                            <button ng-click="submitWorkflow()" class="btn btn-success">Submit</button>
+                            <button ng-click="saveWorkflow()" class="btn btn-success">Save</button>
+                            <a class="btn btn-success" href="data:text/json;charset=utf-8,{{encodeJson(jsonworkflow)}}" download="{{jsonworkflow.name}}.json">Export JSON</a>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       <div id="monitoring" class="tab-pane fade">
+            <div class="col-sm-12" style="height:100%;">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Monitoring
+                    <div class="col-sm-4 pull-right">
+                                    <div ui-slider min="10" max="120" ng-model="monitoringPanelZoomlevel"></div>
+                    </div>
+                    </h3>
+                </div>
+                <div class="panel-body" style="height:100%;overflow:hidden;width:100%;">
+                    <js-plumb-canvas x="pos_x" y="pos_y" zoom="monitoringPanelZoomlevel"
+                                             id="worksheet2">
+                                <ng-include src="'monitoredTaskTemplate.html'"
+                                            ng-repeat="task in workflowMonitoring.tasks"></ng-include>
+                            </js-plumb-canvas>
+                </div>
+            </div>
+            </div>
+
+        </div>
+        <div id="my_workflows" class="tab-pane fade in">
+            <div class="well well-sm">
+                <strong>Display</strong>
+                <div class="btn-group">
+                    <a href="#" id="list" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-th-list"></span>List</a>
+                    <a href="#" id="grid" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-th"></span>Grid</a>
+                </div>
+            </div>
+            <div id="products" class="row list-group">
+                <div ng-repeat="workflow in vm.workflows" class="item col-xs-3 col-lg-3">
+                    <div class="thumbnail">
+                        <!--<img class="group list-group-image" src="http://placehold.it/400x250/000/fff" alt="" />-->
+                        <div class="caption">
+                            <h4 class="group inner list-group-item-heading">
+                                {{workflow.json_workflow.name}}</h4>
+                            <h5 class="group inner list-group-item-heading">
+                                {{workflow.json_workflow.author}}</h5>
+                            <p ng-text-truncate="workflow.json_workflow.abstract"
+                                ng-tt-chars-threshold="40" class="group inner list-group-item-text">
+                                </p>
+                            <div class="row">
+                                <div class="col-xs-12 col-md-6">
+                                    <button ng-click="loadWorkflow(workflow)" class="btn btn-success">View</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+     <!--   <div id="json_response" class="tab-pane fade">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">JSON Response</h3>
+                </div>
+                <div class="panel-body" style="height:400px;overflow-y:scroll;width:100%;">
+                    <pre ng-if="!(jsonresponse | isEmpty)">{{jsonresponse}}</pre>
+                </div>
+            </div>
+        </div>-->
+
+    </div>
+
+
+    <script type="text/ng-template" id="task-delete-dialog.html">
+        <div class="modal-header">
+            <h3>Delete task</h3>
+        </div>
+
+        <div class="modal-body">
+            Are you sure to delete this task from the workflow?
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-warning" ng-click="closeThisDialog()" style="margin-bottom:0;">Back</button>
+            <button type="submit" class="btn btn-primary" ng-click="confirm()">Delete</button>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="dependency-delete-dialog.html">
+        <div class="modal-header">
+            <h3>Delete dependency</h3>
+        </div>
+
+        <div class="modal-body">
+            Are you sure to delete this dependency from the workflow?
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-warning" ng-click="closeThisDialog()" style="margin-bottom:0;">Back</button>
+            <button type="submit" class="btn btn-primary" ng-click=confirm()>Delete</button>
+        </div>
+    </script>
+
+
+    <script type="text/ng-template" id="standardTemplate.html">
+        <js-plumb-object ng-click="setActiveTask(task)" ng-dblclick="deleteTask(task)" state-object="task" ng-style="{ 'left':task.x, 'top':task.y }"
+                         class="state_window" ng-class="{
+                        'status-grey': task.status === 'OPH_STATUS_UNSELECTED',
+                        'status-pink': task.status === 'OPH_STATUS_PENDING',
+                        'status-orange': task.status === 'OPH_STATUS_RUNNING',
+                        'status-cyan': task.status === 'OPH_STATUS_WAITING',
+                        'status-green': task.status === 'OPH_STATUS_COMPLETED',
+                        'status-yellow': task.status === 'OPH_STATUS_SKIPPED',
+                        'status-red': task.status === 'OPH_STATUS_ERROR' ||
+                                    task.status === 'OPH_STATUS_PENDING_ERROR' ||
+                                    task.status === 'OPH_STATUS_RUNNING_ERROR' ||
+                                    task.status === 'OPH_STATUS_START_ERROR' ||
+                                    task.status === 'OPH_STATUS_SET_ENV_ERROR' ||
+                                    task.status === 'OPH_STATUS_INIT_ERROR' ||
+                                    task.status === 'OPH_STATUS_DISTRIBUTE_ERROR' ||
+                                    task.status === 'OPH_STATUS_EXECUTE_ERROR' ||
+                                    task.status === 'OPH_STATUS_REDUCE_ERROR' ||
+                                    task.status === 'OPH_STATUS_DESTROY_ERROR' ||
+                                    task.status === 'OPH_STATUS_UNSET_ENV_ERROR'
+                                    }">
+            <h5>{{task.name}}</h5>
+            <h7>{{task.operator.name}}</h7>
+            <div style="position:absolute; top:100%; right:50%;">
+                <js-plumb-endpoint ng-repeat="endpoint in task.sources" anchor="Bottom" uuid="{{endpoint.uuid}}"
+                                   settings="sourceEndpointStyle">
+                    <js-plumb-connection ng-click="setActiveConnection(endpoint.uuid,connection.uuid)" ng-dblclick="deleteConnection(endpoint.uuid,connection.uuid)"
+                                         ng-repeat="connection in endpoint.connections" ng-model="connection">
+
+                    </js-plumb-connection>
+                </js-plumb-endpoint>
+            </div>
+            <div style="position:absolute; top:0%; right:50%;">
+                <js-plumb-endpoint ng-repeat="endpoint in task.targets" anchor="Top" uuid="{{endpoint.uuid}}"
+                                   settings="targetEndpointStyle"></js-plumb-endpoint>
+            </div>
+        </js-plumb-object>
+
+    </script>
+
+     <script type="text/ng-template" id="monitoredTaskTemplate.html">
+        <js-plumb-object state-object="task" ng-style="{ 'left':task.x, 'top':task.y }"
+                          class="state_window" ng-class="{
+                        'status-grey': task.status === 'OPH_STATUS_UNSELECTED',
+                        'status-pink': task.status === 'OPH_STATUS_PENDING',
+                        'status-orange': task.status === 'OPH_STATUS_RUNNING',
+                        'status-cyan': task.status === 'OPH_STATUS_WAITING',
+                        'status-green': task.status === 'OPH_STATUS_COMPLETED',
+                        'status-yellow': task.status === 'OPH_STATUS_SKIPPED',
+                        'status-red': task.status === 'OPH_STATUS_ERROR' ||
+                                    task.status === 'OPH_STATUS_PENDING_ERROR' ||
+                                    task.status === 'OPH_STATUS_RUNNING_ERROR' ||
+                                    task.status === 'OPH_STATUS_START_ERROR' ||
+                                    task.status === 'OPH_STATUS_SET_ENV_ERROR' ||
+                                    task.status === 'OPH_STATUS_INIT_ERROR' ||
+                                    task.status === 'OPH_STATUS_DISTRIBUTE_ERROR' ||
+                                    task.status === 'OPH_STATUS_EXECUTE_ERROR' ||
+                                    task.status === 'OPH_STATUS_REDUCE_ERROR' ||
+                                    task.status === 'OPH_STATUS_DESTROY_ERROR' ||
+                                    task.status === 'OPH_STATUS_UNSET_ENV_ERROR'
+                                    }">
+            <h5>{{task.name}}</h5>
+            <h7>{{task.operator.name}}</h7>
+            <div style="position:absolute; top:100%; right:50%;">
+                <js-plumb-endpoint ng-repeat="endpoint in task.sources" anchor="Bottom" uuid="{{endpoint.uuid}}"
+                                   settings="sourceEndpointStyle">
+                    <js-plumb-connection
+                                         ng-repeat="connection in endpoint.connections" ng-model="connection">
+
+                    </js-plumb-connection>
+                </js-plumb-endpoint>
+            </div>
+            <div style="position:absolute; top:0%; right:50%;">
+                <js-plumb-endpoint ng-repeat="endpoint in task.targets" anchor="Top" uuid="{{endpoint.uuid}}"
+                                   settings="targetEndpointStyle"></js-plumb-endpoint>
+            </div>
+        </js-plumb-object>
+
+    </script>
+
+
+
+    <script type="text/ng-template" id="iterationTemplate.html">
+        <js-plumb-object state-object="task" ng-style="{ 'left':task.x, 'top':task.y }" class="iteration">
+            <h3>{{task.name}}</h3>
+            <h5>{{task.operator.name}}</h5>
+        </js-plumb-object>
+
+    </script>
+
+    <script type="text/ng-template" id="selectionTemplate.html">
+        <js-plumb-object state-object="task" ng-style="{ 'left':task.x, 'top':task.y }" class="selection">
+            <h3>{{task.name}}</h3>
+            <h5>{{task.operator.name}}</h5>
+        </js-plumb-object>
+
+    </script>
+</div>

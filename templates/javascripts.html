@@ -1,0 +1,71 @@
+{% load compress %}
+{% load staticfiles %}
+
+{% compress js %}
+<script type="text/javascript" src="{% static 'bower_components/jquery/dist/jquery.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/bootstrap/dist/js/bootstrap.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/bootstrap-material-design/dist/js/material.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/bootstrap-material-design/dist/js/ripples.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/underscore/underscore.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'bower_components/angular/angular.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/angular-route/angular-route.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/angular-cookies/angular-cookies.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'bower_components/ngDialog/js/ngDialog.js' %}"></script>
+<script type="text/javascript" src="{% static 'lib/snackbarjs/snackbar.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'bower_components/angular-sanitize/angular-sanitize.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/tv4/tv4.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/objectpath/lib/ObjectPath.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/angular-schema-form/dist/schema-form.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/angular-schema-form/dist/bootstrap-decorator.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/angular-schema-form-datepicker/bootstrap-datepicker.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/pickadate/lib/picker.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/pickadate/lib/picker.date.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'bower_components/jsplumb/dist/js/jquery.jsPlumb-1.6.2-min.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/jquery-ui/jquery-ui.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/angular-ui-slider/src/slider.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/angular-dragdrop/src/angular-dragdrop.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/angular-growl-v2/build/angular-growl.js' %}"></script>
+<script type="text/javascript" src="{% static 'bower_components/ng-text-truncate/ng-text-truncate.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'javascripts/ophidiaAnalyticsIDE.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/ophidiaAnalyticsIDE.routes.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/ophidiaAnalyticsIDE.config.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'javascripts/editor/editor.module.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/controllers/editor.controller.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/controllers/workflowAttributesForm.controller.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/controllers/connectionForm.controller.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/controllers/argumentForm.controller.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/controllers/functionForm.controller.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/directives/jsPlumbCanvas.directive.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/directives/jsPlumbConnection.directive.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/directives/jsPlumbEndpoint.directive.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/directives/jsPlumbObject.directive.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/directives/onReadFile.directive.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/services/growlNotification.service.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/services/operators.service.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/services/workflowSubmission.service.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/services/workflowData.service.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/services/workflowGraph.service.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/services/workflowMonitoring.service.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/filters/pretty.filter.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/filters/isEmpty.filter.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/editor/filters/dashSeparatedCase.filter.js' %}"></script>
+
+
+<script type="text/javascript" src="{% static 'javascripts/authentication/authentication.module.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/authentication/services/authentication.service.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/authentication/controllers/register.controller.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/authentication/controllers/login.controller.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'javascripts/layout/layout.module.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/layout/controllers/navbar.controller.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'javascripts/workflows/workflows.module.js' %}"></script>
+<script type="text/javascript" src="{% static 'javascripts/workflows/services/workflows.service.js' %}"></script>
+
+{% endcompress %}
